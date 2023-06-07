@@ -1,0 +1,25 @@
+resources:
+- name: my-image-src
+  type: git
+  source:
+    uri: https://github.com/jsirois/scie-pants-issue-205
+jobs:
+- name: build
+  plan:
+  - get: my-image-src
+  - task: build
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: concourse/oci-build-task
+      inputs:
+      - name: my-image-src 
+        path: .
+      outputs:
+      - name: image
+      run:
+        path: build
+
